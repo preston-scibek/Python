@@ -1,4 +1,5 @@
-import sys, os, platform
+import platform
+
 
 class Bugs:
 
