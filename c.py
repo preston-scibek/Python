@@ -216,112 +216,135 @@ z = [[".", "#", ".", "#", ".", "#", ],
 
 
 class Learner(object):
-	"""Simple learner object that turns lights on and off from http://adventofcode.com/2015/day/18/"""
-	# # = on
-	# . = off
-	# A light which is on stays on when 2 or 3 neighbors are on, and turns off otherwise.
-	# A light which is off turns on if exactly 3 neighbors are on, and stays off otherwise.
+    """Simple learner object that turns lights on and off from http://adventofcode.com/2015/day/18/"""
+    # # = on
+    # . = off
+    # A light which is on stays on when 2 or 3 neighbors are on, and turns off otherwise.
+    # A light which is off turns on if exactly 3 neighbors are on, and stays off otherwise.
 
-	def __init__(self, first):
-		self.initial = first
-		self.current = copy.deepcopy(self.initial)
-		self.states = [self.initial]
-		self.next = copy.deepcopy(self.initial)
-		self.ON = "#"
-		self.OFF = "."
-		self.onoff = {
-			self.OFF:  {
-			"func": self.offnext,
-			"name": "OFF"
-			},
-			self.ON: {
-			"func": self.onnext,
-			"name": "ON"
-			}
-		}
+    def __init__(self, first):
+        self.initial = first
+        self.current = copy.deepcopy(self.initial)
+        self.states = [self.initial]
+        self.next = copy.deepcopy(self.initial)
+        self.ON = "#"
+        self.OFF = "."
+        self.onoff = {
+            self.OFF:  {
+            "func": self.offnext,
+            "name": "OFF"
+            },
+            self.ON: {
+            "func": self.onnext,
+            "name": "ON"
+            }
+        }
 
-	def get_neighbors(self, row, col):
-		a,b,c,d,e,f,g,h="", "", "","","","","",""
-		
-		if row - 1 < 0 or col - 1 < 0:
-			pass
-		else:
-			a = self.current[row-1][col-1]
-		if row - 1 < 0:
-			pass
-		else:
-			b = self.current[row-1][col]
-		if row - 1 < 0 or col + 1 >  len(self.current[row]) -1 :
-			pass
-		else:
-			c = self.current[row-1][col+1]
-		if col + 1 > len(self.current[row])  - 1:
-			pass
-		else:
-			d = self.current[row][col+1]
-		if row + 1 > len(self.current) - 1 or col + 1 > len(self.current[row]) - 1:
-			pass
-		else:
-			e = self.current[row+1][col + 1]
-		if row + 1 > len(self.current) - 1:
-			pass
-		else:
-			f = self.current[row + 1][col]
-		if row + 1 > len(self.current)  - 1 or col - 1 < 0:
-			pass
-		else:
-			g = self.current[row+1][col-1]
-		if col - 1 < 0:
-			pass
-		else:
-			h = self.current[row][col-1]
+    def get_neighbors(self, row, col):
+        a,b,c,d,e,f,g,h="", "", "","","","","",""
+        
+        if row - 1 < 0 or col - 1 < 0:
+            pass
+        else:
+            a = self.current[row-1][col-1]
+        if row - 1 < 0:
+            pass
+        else:
+            b = self.current[row-1][col]
+        if row - 1 < 0 or col + 1 >  len(self.current[row]) -1 :
+            pass
+        else:
+            c = self.current[row-1][col+1]
+        if col + 1 > len(self.current[row])  - 1:
+            pass
+        else:
+            d = self.current[row][col+1]
+        if row + 1 > len(self.current) - 1 or col + 1 > len(self.current[row]) - 1:
+            pass
+        else:
+            e = self.current[row+1][col + 1]
+        if row + 1 > len(self.current) - 1:
+            pass
+        else:
+            f = self.current[row + 1][col]
+        if row + 1 > len(self.current)  - 1 or col - 1 < 0:
+            pass
+        else:
+            g = self.current[row+1][col-1]
+        if col - 1 < 0:
+            pass
+        else:
+            h = self.current[row][col-1]
 
-		return a,b,c,d,e,f,g,h
+        return a,b,c,d,e,f,g,h
 
-	def get_next(self, row, col):
-		state = self.onoff[self.current[row][col]]
-		state['func'](row, col)
+    def get_next(self, row, col):
+        state = self.onoff[self.current[row][col]]
+        state['func'](row, col)
 
-	def offnext(self, row, col):
-		self.next[row][col] = self.ON if self.get_neighbors(row, col).count(self.ON) == 3 else self.OFF
+    def offnext(self, row, col):
+        self.next[row][col] = self.ON if self.get_neighbors(row, col).count(self.ON) == 3 else self.OFF
 
-	def onnext(self, row, col):
-		self.next[row][col] = self.ON if self.get_neighbors(row, col).count(self.ON) in [2,3] else self.OFF
+    def onnext(self, row, col):
+        self.next[row][col] = self.ON if self.get_neighbors(row, col).count(self.ON) in [2,3] else self.OFF
 
-	def convert(self, n=1):
-		for i in range(n):
-			for row_num, row in enumerate(self.current):
-				for col_num, col in enumerate(row):
-					self.get_next(row_num, col_num)
+    def convert(self, n=1):
+        for i in range(n):
+            for row_num, row in enumerate(self.current):
+                for col_num, col in enumerate(row):
+                    self.get_next(row_num, col_num)
 
-			self.current = copy.deepcopy(self.next)
-			self.states.append(copy.deepcopy(self.current))
+            self.current = copy.deepcopy(self.next)
+            self.states.append(copy.deepcopy(self.current))
 
-	def print_t(self):
-		print 
-		for row in self.current:
-			for col in row:
-				print col,
-			print 
+    def convert_corners_on(self, n=1):
+        height = len(self.current)
+        width = len(self.current[0])
+        self.initial[0][0] = self.ON
+        self.initial[0][width-1] = self.ON
+        self.initial[height-1][0] = self.ON
+        self.initial[height-1][width-1] = self.ON
+        self.current = copy.deepcopy(self.initial)
+        self.states = [self.initial]
+        self.next = copy.deepcopy(self.initial)
 
-	def count_on(self):
-		res = 0
-		for row in self.current:
-			for col in row:
-				if col == self.ON:
-					res += 1
-		return res
+        for i in range(n):
+            for row_num, row in enumerate(self.current):
+                for col_num, col in enumerate(row):
+                    if (row_num == 0 and col_num == 0) or (row_num == 0 and col_num == width-1) or \
+                             (row_num == height-1 and col_num == 0) or (row_num == height-1 and col_num == width-1):
+                        continue
+                    self.get_next(row_num, col_num)
 
-	def count_off(self):
-		res = 0
-		for row in self.current:
-			for col in row:
-				if col == self.OFF:
-					res += 1
-		return res
+            self.current = copy.deepcopy(self.next)
+            self.states.append(copy.deepcopy(self.current))
+
+    def print_t(self):
+        print 
+        for row in self.current:
+            for col in row:
+                print col,
+            print 
+
+    def count_on(self):
+        res = 0
+        for row in self.current:
+            for col in row:
+                if col == self.ON:
+                    res += 1
+        return res
+
+    def count_off(self):
+        res = 0
+        for row in self.current:
+            for col in row:
+                if col == self.OFF:
+                    res += 1
+        return res
+
 
 if __name__ == "__main__":
-	l = Learner(y)
-	l.convert(n=100)
-	l.print_t()
-	print l.count_on()
+    l = Learner(y)
+    l.convert_corners_on(n=100)
+    l.print_t()
+    print l.count_on()
