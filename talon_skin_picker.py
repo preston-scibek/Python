@@ -1,7 +1,9 @@
+
 import random
 
 
 def talon_skin_picker():
+    """ pick a random talon skin """
     choices = {
         1: "Blood Moon",
         2: "Samsung White",
