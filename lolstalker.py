@@ -1,7 +1,7 @@
 import json
 import urllib2
 import time
-api_key= "RGAPI-33C7B072-4AFC-44A8-8666-1E90CDEB2E6E"
+api_key= ""
 array_summoners=[ "generalblood1"]
 # redcard10, kcmontgomery, angryostrich7, yellowduck7, ironlioncross, krispeebakon, mcm4088, generalblood1
 positions = (("TOP", 1), ("MIDDLE", 2), ("JUNGLE", 3), ("BOT", 4))
