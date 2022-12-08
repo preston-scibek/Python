@@ -2,7 +2,7 @@ import requests
 
 url = "https://api.spotify.com/v1/playlists/5s6auDOrQOmDZ1Uxdi27g6/tracks"
 headers = {
-    "Authorization": "Bearer "
+    "Authorization": "Bearer {token}"
 }
 res = requests.get(url, headers=headers)
 items = res.json()['items']
