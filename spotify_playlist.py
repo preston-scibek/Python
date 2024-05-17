@@ -9,6 +9,17 @@ def ten_percent(items : list):
     Args:
         items (list) : list of songs from the playlist api
     """
+    x_percent(items, 10)
+
+def x_percent(items : list , percent : int):
+    """Print out the top x% of artists in a playlist
+
+    Args:
+        items (list) : list of songs from the playlist api
+        percent (int) : % of songs to print out as integeger
+    """
+    if percent < 0 or percent > 100:
+        raise ValueError(f"percent must be between 0 and 100, was {percent}")
     artists = {}
     for item in items:
         for artist in item['track'].get('artists', []):
@@ -19,10 +30,10 @@ def ten_percent(items : list):
     artists = [(k,v) for k,v in sorted(artists.items(), key=lambda x: x[1])]
 
     total_artists = len(artists)
-    ten_percent = total_artists * .10
-    top_10percent = artists[::-1][0:int(ten_percent) + 1]
+    x_percent = total_artists * (percent / 100.0)
+    top_x_percent = artists[::-1][0:int(x_percent) + 1]
 
-    for artist, count in top_10percent:
+    for artist, count in top_x_percent:
         print(f"{artist}: {count}")
 
 def duped_songs(items : list):
@@ -184,10 +195,25 @@ def randomize_and_create_new_playlist(items : list, headers : dict):
             splice = randomized_list[index:index+100]
         res = requests.post(f"https://api.spotify.com/v1/playlists/{new_playlist['id']}/tracks", headers=post_headers, data=json.dumps({"uris": [song['track']['uri'] for song in splice]}))
 
+if __name__ == "__main__":
+     
+    headers = auth()
+    items = get_playlist_items(headers, "5s6auDOrQOmDZ1Uxdi27g6")
+    print(len(items))
 
-headers = auth()
-items = get_playlist_items(headers, "5s6auDOrQOmDZ1Uxdi27g6")
-print(len(items))
-#ten_percent(items)
-#duped_songs(items)
-randomize_and_create_new_playlist(items, headers)
+    while True:
+        _v = str(input("10 (percent) ; x (percent) ; d (uped songs) ; e (xit) ; r (andom shuffle) ;\nInput: ")).lower()
+        match _v:
+            case "10":
+                ten_percent(items)
+            case "x":
+                x_percent(items, int(input("percent: ")))
+            case "d":
+                duped_songs(items)
+            case "e":
+                exit()
+            case "r":
+                randomize_and_create_new_playlist(items, headers)
+            case _:
+                print("what")
+
